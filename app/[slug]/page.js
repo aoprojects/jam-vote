@@ -7,7 +7,7 @@ import { getGroupedSongs } from '@/lib/utils/songGrouping';
 import JamHeader from '@/components/jam/JamHeader';
 import JamToolbar from '@/components/jam/JamToolbar';
 import JamSongList from '@/components/jam/JamSongList';
-import { FireIcon, MicrophoneIcon } from '@heroicons/react/24/solid';
+import { FireIcon, MusicalNoteIcon } from '@heroicons/react/24/solid';
 import LoadingBlock from "@/components/LoadingBlock";
 import CreateSongModal from "@/components/CreateSongModal";
 import ConfirmDialog from '@/components/ConfirmDialog';
@@ -149,7 +149,7 @@ export default function JamPage() {
             <div>
               <div className="bg-indigo-800 px-4 py-4">
                 <h3 className="text-lg font-semibold text-white flex items-center">
-                  <MicrophoneIcon className="w-5 h-5 mr-2" /> Ballads
+                  <MusicalNoteIcon className="w-5 h-5 mr-2" /> Ballads
                 </h3>
               </div>
               <ul className="divide-y divide-gray-200">

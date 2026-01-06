@@ -5,6 +5,7 @@ import SongRowButtonToolbar from "@/components/SongRowButtonToolbar";
 import SongVotingButton from "@/components/SongVotingButton";
 import CaptainBadges from "@/components/CaptainBadges";
 import BaseSongRow from "@/components/SongRowBase";
+import { cn } from "@/lib/utils";
 
 export default function SongRow({ 
   jamSong, 
@@ -15,7 +16,8 @@ export default function SongRow({
   isNext, 
   hideType,
   highlight,
-  hostMode
+  hostMode,
+  isHighlighted
 }) {
   const { song } = jamSong;
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -34,7 +36,10 @@ export default function SongRow({
         song={song}
         isNext={isNext}
         hideType={hideType}
-        className={jamSong.played ? 'bg-gray-200 opacity-50' : ''}
+        className={cn(
+          jamSong.played ? 'bg-gray-200 opacity-50' : '',
+          isHighlighted ? 'bg-accent/50' : ''
+        )}
         leftControl={
           <SongVotingButton jamSong={jamSong} onVote={onVote} />
         }

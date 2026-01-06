@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
-import { Music, Users, ListMusic, ThumbsUp, Plus } from 'lucide-react';
+import { Music, Plus } from 'lucide-react';
 import Link from 'next/link';
 import CreateJamModal from '@/components/CreateJamModal';
 
@@ -26,7 +26,7 @@ export default function Home() {
         <p className="text-2xl text-purple-200 mb-20">Host live music jams and vote on what to play next.</p>
 
         {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-3">
+        <div className="flex flex-col sm:flex-row gap-4 mb-5">
           <Button 
             onClick={() => setIsCreateModalOpen(true)}
             size="lg" 
@@ -47,74 +47,56 @@ export default function Home() {
         </p>
       </div>
 
-      {/* Process Timeline */}
-      <div className="max-w-2xl mx-auto space-y-6">
+      {/* Process Steps Grid */}
+      <div className="grid md:grid-cols-2 gap-8">
         {/* Step 1 */}
-        <div className="flex gap-4 items-center">
-          <div className="flex flex-col items-center">
-            <div className="w-12 h-12 rounded-full bg-purple-800 bg-opacity-20 border-2 border-purple-400 border-opacity-40 flex items-center justify-center text-purple-200 font-semibold text-lg flex-shrink-0">
+        <div className="bg-purple-800 bg-opacity-30 p-6 rounded-lg flex items-center gap-6">
+          <div className="flex-shrink-0">
+            <div className="w-12 h-12 rounded-full bg-purple-800 bg-opacity-20 border-2 border-purple-400 border-opacity-40 flex items-center justify-center text-purple-200 font-semibold text-lg">
               1
             </div>
-            <div className="w-0.5 h-full bg-purple-600 bg-opacity-30 mt-2"></div>
           </div>
-          <div className="bg-purple-800 bg-opacity-30 p-6 rounded-lg flex-1">
-            <div className="flex items-center mb-4">
-              <Music className="w-8 h-8 mr-3 text-purple-300" />
-              <h2 className="text-xl font-semibold">Host a Jam</h2>
-            </div>
+          <div className="flex-1">
+            <h2 className="text-xl font-semibold mb-2">Host a Jam</h2>
             <p>Create your jam session and invite friends to join the fun</p>
           </div>
         </div>
         
         {/* Step 2 */}
-        <div className="flex gap-4 items-center">
-          <div className="flex flex-col items-center">
-            <div className="w-0.5 h-6 bg-purple-600 bg-opacity-30 -mt-2"></div>
-            <div className="w-12 h-12 rounded-full bg-purple-800 bg-opacity-20 border-2 border-purple-400 border-opacity-40 flex items-center justify-center text-purple-200 font-semibold text-lg flex-shrink-0">
+        <div className="bg-purple-800 bg-opacity-30 p-6 rounded-lg flex items-center gap-6">
+          <div className="flex-shrink-0">
+            <div className="w-12 h-12 rounded-full bg-purple-800 bg-opacity-20 border-2 border-purple-400 border-opacity-40 flex items-center justify-center text-purple-200 font-semibold text-lg">
               2
             </div>
-            <div className="w-0.5 h-full bg-purple-600 bg-opacity-30 mt-2"></div>
           </div>
-          <div className="bg-purple-800 bg-opacity-30 p-6 rounded-lg flex-1">
-            <div className="flex items-center mb-4">
-              <ListMusic className="w-8 h-8 mr-3 text-purple-300" />
-              <h2 className="text-xl font-semibold">Build the Playlist</h2>
-            </div>
+          <div className="flex-1">
+            <h2 className="text-xl font-semibold mb-2">Build the Playlist</h2>
             <p>Suggest songs and collaborate on the perfect setlist</p>
           </div>
         </div>
         
         {/* Step 3 */}
-        <div className="flex gap-4 items-center">
-          <div className="flex flex-col items-center">
-            <div className="w-0.5 h-6 bg-purple-600 bg-opacity-30 -mt-2"></div>
-            <div className="w-12 h-12 rounded-full bg-purple-800 bg-opacity-20 border-2 border-purple-400 border-opacity-40 flex items-center justify-center text-purple-200 font-semibold text-lg flex-shrink-0">
+        <div className="bg-purple-800 bg-opacity-30 p-6 rounded-lg flex items-center gap-6">
+          <div className="flex-shrink-0">
+            <div className="w-12 h-12 rounded-full bg-purple-800 bg-opacity-20 border-2 border-purple-400 border-opacity-40 flex items-center justify-center text-purple-200 font-semibold text-lg">
               3
             </div>
-            <div className="w-0.5 h-full bg-purple-600 bg-opacity-30 mt-2"></div>
           </div>
-          <div className="bg-purple-800 bg-opacity-30 p-6 rounded-lg flex-1">
-            <div className="flex items-center mb-4">
-              <ThumbsUp className="w-8 h-8 mr-3 text-purple-300" />
-              <h2 className="text-xl font-semibold">Vote Together</h2>
-            </div>
+          <div className="flex-1">
+            <h2 className="text-xl font-semibold mb-2">Vote Together</h2>
             <p>Choose the next song and keep the music flowing</p>
           </div>
         </div>
         
         {/* Step 4 */}
-        <div className="flex gap-4 items-center">
-          <div className="flex flex-col items-center">
-            <div className="w-0.5 h-6 bg-purple-600 bg-opacity-30 -mt-2"></div>
-            <div className="w-12 h-12 rounded-full bg-purple-800 bg-opacity-20 border-2 border-purple-400 border-opacity-40 flex items-center justify-center text-purple-200 font-semibold text-lg flex-shrink-0">
+        <div className="bg-purple-800 bg-opacity-30 p-6 rounded-lg flex items-center gap-6">
+          <div className="flex-shrink-0">
+            <div className="w-12 h-12 rounded-full bg-purple-800 bg-opacity-20 border-2 border-purple-400 border-opacity-40 flex items-center justify-center text-purple-200 font-semibold text-lg">
               4
             </div>
           </div>
-          <div className="bg-purple-800 bg-opacity-30 p-6 rounded-lg flex-1">
-            <div className="flex items-center mb-4">
-              <Users className="w-8 h-8 mr-3 text-purple-300" />
-              <h2 className="text-xl font-semibold">Rock Out</h2>
-            </div>
+          <div className="flex-1">
+            <h2 className="text-xl font-semibold mb-2">Rock Out</h2>
             <p>Turn your living room into an instant concert venue</p>
           </div>
         </div>

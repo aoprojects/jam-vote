@@ -85,10 +85,8 @@ const SongAutocomplete = forwardRef(({
     if (option.isBrowseAll) {
       return (
         <div className="flex items-center text-indigo-600">
-          <Link href="/songs" className="flex items-center gap-2">
-            <PlusIcon className="h-5 w-5 flex-shrink-0 text-indigo-600" aria-hidden="true" />
-            <span className="font-medium">Browse all songs</span>
-          </Link>
+          <PlusIcon className="h-5 w-5 flex-shrink-0 text-indigo-600 mr-2" aria-hidden="true" />
+          <span className="font-medium">Browse all songs</span>
         </div>
       );
     }
@@ -117,7 +115,7 @@ const SongAutocomplete = forwardRef(({
         <span
           className={`inline-flex items-center px-2 py-0.5 rounded-full text-sm font-medium ${
             option.type === 'banger'
-              ? 'bg-orange-100 text-orange-800'
+              ? 'bg-purple-100 text-purple-800'
               : 'bg-blue-100 text-blue-800'
           }`}
         >
@@ -141,6 +139,10 @@ const SongAutocomplete = forwardRef(({
     if (option.isInJam) {
       onFocusExisting?.(option.jamSongId);
       setQuery('');
+      // Blur the input so Enter key can be used to vote
+      if (ref && typeof ref === 'object' && ref.current) {
+        ref.current.blur();
+      }
       return;
     }
 
@@ -233,6 +235,75 @@ const SongAutocomplete = forwardRef(({
     allOptions.push(addNewOption, browseAllOption);
   }
 
+  // Calculate the default highlighted index
+  // Priority: 1) in-jam matches, 2) search matches, 3) "Add new" option
+  const getDefaultHighlightedIndex = () => {
+    if (!hasQuery || isLoading) return null;
+    
+    // First priority: If there are in-jam matches, highlight the first one
+    if (inJamMatches.length > 0) {
+      const firstInJamIndex = allOptions.findIndex(opt => 
+        opt.isInJam && opt.jamSongId === inJamMatches[0].jamSongId
+      );
+      if (firstInJamIndex !== -1) {
+        return firstInJamIndex;
+      }
+    }
+    
+    // Second priority: If there are search matches, highlight the first one
+    if (addableResults.length > 0) {
+      const firstSearchResultIndex = allOptions.findIndex(opt => 
+        opt.value && addableResults.some(r => r.value === opt.value)
+      );
+      if (firstSearchResultIndex !== -1) {
+        return firstSearchResultIndex;
+      }
+    }
+    
+    // Third priority: Highlight the "Add new" option
+    const addNewIndex = allOptions.findIndex(opt => opt.isAddNew);
+    if (addNewIndex !== -1) {
+      return addNewIndex;
+    }
+    
+    // Fallback: Find the first selectable item
+    for (let i = 0; i < allOptions.length; i++) {
+      const option = allOptions[i];
+      if (!option.isSection && !option.isPlaceholder && !option.disabled) {
+        return i;
+      }
+    }
+    
+    return null;
+  };
+
+  const defaultHighlightedIndex = getDefaultHighlightedIndex();
+
+  const handleKeyDown = (e) => {
+    // When Enter is pressed with a query
+    if (e.key === 'Enter' && query.trim() && !e.defaultPrevented) {
+      // Check if there are any matches (in-jam or search results)
+      const hasInJamMatches = inJamMatches.length > 0;
+      const hasSearchMatches = addableResults.length > 0;
+      
+      // If there are any matches (in-jam or search), let downshift handle Enter
+      // to select the highlighted item (which will be the first in-jam match if available,
+      // otherwise the first search match)
+      // If there are no matches, default to "Add new"
+      if (!hasInJamMatches && !hasSearchMatches && !isLoading) {
+        e.preventDefault();
+        e.stopPropagation();
+        // Trigger the "Add new" action
+        if (onAddNew) {
+          onAddNew(query.trim());
+          setQuery('');
+        }
+      }
+      // If there are matches, let the default downshift behavior handle Enter
+      // which will select the highlighted item
+    }
+  };
+
   return (
     <div className="relative">
       <AutoComplete
@@ -264,6 +335,8 @@ const SongAutocomplete = forwardRef(({
         side="top"
         inputRef={ref}
         autoFocus={autoFocus}
+        onKeyDown={handleKeyDown}
+        defaultHighlightedIndex={defaultHighlightedIndex}
       />
     </div>
   );

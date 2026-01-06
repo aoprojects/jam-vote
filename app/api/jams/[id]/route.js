@@ -45,6 +45,19 @@ export async function PATCH(request, context) {
     const jamId = params.id;
     console.log('[Debug PATCH] Context params:', { jamId });
 
+    // Validate songId
+    if (!songId) {
+      console.log('[Debug PATCH] Invalid songId:', songId);
+      return NextResponse.json({ error: 'Invalid songId provided' }, { status: 400 });
+    }
+
+    // Verify the song exists
+    const song = await Song.findById(songId);
+    if (!song) {
+      console.log('[Debug PATCH] Song not found:', songId);
+      return NextResponse.json({ error: `Song with ID ${songId} not found` }, { status: 404 });
+    }
+
     const jam = await Jam.findById(jamId).populate('songs.song');
     if (!jam) {
       return NextResponse.json({ error: 'Jam not found' }, { status: 404 });
@@ -54,12 +67,6 @@ export async function PATCH(request, context) {
       songCount: jam.songs.length,
       songs: jam.songs.map(s => ({ id: s.song._id, order: s.order }))
     });
-
-    // Validate songId
-    if (!songId) {
-      console.log('[Debug PATCH] Invalid songId:', songId);
-      return NextResponse.json({ error: 'Invalid songId provided' }, { status: 400 });
-    }
 
     // Check if song already exists in the jam
     const existingSong = jam.songs.find(s => s.song._id.toString() === songId.toString());
@@ -98,7 +105,12 @@ export async function PATCH(request, context) {
     });
   } catch (error) {
     console.error('Error adding song to jam:', error);
-    return NextResponse.json({ error: 'Failed to add song to jam' }, { status: 500 });
+    console.error('Error stack:', error.stack);
+    const errorMessage = error.message || 'Failed to add song to jam';
+    return NextResponse.json({ 
+      error: errorMessage,
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    }, { status: 500 });
   }
 }
 

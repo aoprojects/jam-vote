@@ -27,6 +27,7 @@ export default function SongFormModal({
 }) {
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [error, setError] = useState(null);
   const form = useForm({
     defaultValues: {
       title: mode === 'add' ? initialTitle || '' : initialData.title || '',
@@ -101,6 +102,7 @@ export default function SongFormModal({
   };
 
   const handleSubmit = async (formData) => {
+    setError(null);
     try {
       console.log('[Debug] Creating/updating song with data:', formData);
       
@@ -121,8 +123,8 @@ export default function SongFormModal({
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || `Failed to ${mode} song`);
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Failed to ${mode} song`);
       }
       
       const song = await response.json();
@@ -131,13 +133,13 @@ export default function SongFormModal({
       // Pass the song to onSubmit for handling in the parent
       onSubmit?.(song);
       onClose();
-    } catch (error) {
-      console.error(`Error ${mode}ing song:`, error);
-      throw error; // Re-throw to be handled by parent
+    } catch (err) {
+      console.error(`Error ${mode}ing song:`, err);
+      setError(err.message || `Failed to ${mode} song. Please try again.`);
     }
   };
 
-  const title = mode === 'edit' ? 'Edit Song' : 'Add New Song';
+  const title = mode === 'edit' ? 'Edit Song' : 'Add a Song';
   const submitText = mode === 'edit' ? 'Save Changes' : 'Add Song';
 
   return (
@@ -156,6 +158,11 @@ export default function SongFormModal({
         </>
       }
     >
+      {error && (
+        <div className="rounded-md bg-red-50 p-4 mb-4">
+          <p className="text-sm text-red-700">{error}</p>
+        </div>
+      )}
       <Form {...form}>
         <form id="song-form" onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4 sm:space-y-6">
           <div className="grid grid-cols-1 gap-y-4 sm:gap-y-6 gap-x-4 sm:grid-cols-2">
@@ -210,7 +217,7 @@ export default function SongFormModal({
               />
             </div>
 
-            <div>
+            <div className="sm:col-span-2">
               <FormField
                 control={form.control}
                 name="type"
@@ -227,13 +234,13 @@ export default function SongFormModal({
                         <div className="flex items-center space-x-2">
                           <RadioGroupItem value="banger" id="banger" />
                           <label htmlFor="banger" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                            Banger
+                            Banger <span className="text-gray-500 font-normal">(fast-paced / energetic / upbeat songs)</span>
                           </label>
                         </div>
                         <div className="flex items-center space-x-2">
                           <RadioGroupItem value="ballad" id="ballad" />
                           <label htmlFor="ballad" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                            Ballad
+                            Ballad <span className="text-gray-500 font-normal">(slow-paced / melodic / emotional songs)</span>
                           </label>
                         </div>
                       </RadioGroup>
@@ -250,7 +257,7 @@ export default function SongFormModal({
                 name="chordChart"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Chords/Lyrics URL</FormLabel>
+                    <FormLabel>Chords/Lyrics URL <span className="text-muted-foreground font-normal">(optional)</span></FormLabel>
                     <div className="flex gap-2">
                       <FormControl>
                         <Input 

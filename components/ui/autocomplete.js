@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useCombobox } from "downshift";
 import { cn } from "@/lib/utils";
 import { Check, Search, XCircle } from "lucide-react";
@@ -20,6 +20,8 @@ export function AutoComplete({
   maxWidth = "max-w-full",
   inputRef,
   autoFocus = false,
+  onKeyDown,
+  defaultHighlightedIndex,
 }) {
   const {
     isOpen,
@@ -27,10 +29,12 @@ export function AutoComplete({
     getInputProps,
     getItemProps,
     highlightedIndex,
+    setHighlightedIndex,
   } = useCombobox({
     items: options || [],
     inputValue: inputValue || "",
     selectedItem: options ? options.find(item => item.value === value) || null : null,
+    initialHighlightedIndex: defaultHighlightedIndex !== null && defaultHighlightedIndex !== undefined ? defaultHighlightedIndex : undefined,
     onInputValueChange: ({ inputValue }) => {
       onInputChange?.(inputValue || "");
     },
@@ -41,6 +45,28 @@ export function AutoComplete({
     },
     itemToString: (item) => item?.label || "",
   });
+
+  // Update highlighted index when defaultHighlightedIndex changes
+  useEffect(() => {
+    if (isOpen && defaultHighlightedIndex !== null && defaultHighlightedIndex !== undefined) {
+      // Find the first selectable item if the default index is not selectable
+      const targetIndex = defaultHighlightedIndex;
+      if (targetIndex >= 0 && targetIndex < options.length) {
+        const targetOption = options[targetIndex];
+        if (targetOption && !targetOption.isSection && !targetOption.isPlaceholder && !targetOption.disabled) {
+          setHighlightedIndex(targetIndex);
+        } else {
+          // Find the first selectable item
+          const firstSelectableIndex = options.findIndex(opt => 
+            !opt.isSection && !opt.isPlaceholder && !opt.disabled
+          );
+          if (firstSelectableIndex !== -1) {
+            setHighlightedIndex(firstSelectableIndex);
+          }
+        }
+      }
+    }
+  }, [isOpen, defaultHighlightedIndex, options, setHighlightedIndex]);
 
   const { ref, ...inputProps } = getInputProps();
 
@@ -74,6 +100,16 @@ export function AutoComplete({
           className={cn("pl-9 rounded-full", inputClassName)}
           placeholder={placeholder}
           autoFocus={autoFocus}
+          onKeyDown={(e) => {
+            // Call custom handler first
+            if (onKeyDown) {
+              onKeyDown(e);
+            }
+            // If custom handler didn't prevent default, let downshift handle it
+            if (!e.defaultPrevented && inputProps.onKeyDown) {
+              inputProps.onKeyDown(e);
+            }
+          }}
         />
       </div>
 
