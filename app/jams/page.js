@@ -96,7 +96,7 @@ export default function Home() {
               </Link>
               <div className="flex items-center gap-4">
                 <div className="text-sm text-gray-500">
-                  {jam.songs.length} songs
+                  {jam.songs.length} {jam.songs.length === 1 ? 'song' : 'songs'}
                 </div>
               </div>
             </div>
@@ -119,6 +119,34 @@ export default function Home() {
           <PlusIcon className="w-4 h-4" />
           New Jam
         </Button>
+      </div>
+
+      {/* Demo Jam */}
+      <div className="bg-white shadow overflow-hidden sm:rounded-lg border border-gray-200 mb-4">
+        <ul className="divide-y divide-gray-200">
+          <li className="hover:bg-gray-50">
+            <div className="px-4 py-4 sm:px-6">
+              <div className="flex items-center justify-between">
+                <Link 
+                  href="/4"
+                  className="flex-grow hover:opacity-75"
+                >
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Demo Jam Session
+                  </h2>
+                  <p className="mt-1 text-sm text-gray-600">
+                    Try out the app with our demo jam
+                  </p>
+                </Link>
+                <div className="flex items-center gap-4">
+                  <div className="text-sm text-gray-500">
+                    Demo
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
       </div>
 
       {/* Current Jams */}

@@ -1,12 +1,12 @@
-import { ArrowDownNarrowWide } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import SongAutocomplete from "@/components/SongAutocomplete";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 export default function JamToolbar({ 
   songAutocompleteRef, 
@@ -33,16 +33,31 @@ export default function JamToolbar({
 
       {currentSongs?.length > 0 && (
         <div className="flex items-center space-x-4 ml-4">
-
-          <Select value={groupingEnabled ? 'type' : 'none'} onValueChange={(value) => setGroupingEnabled(value === 'type')}>
-            <SelectTrigger className="w-auto border-none text-gray-500 focus:text-gray-900 text-sm focus:ring-0">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="type">Group by banger/ballad</SelectItem>
-              <SelectItem value="none">No grouping</SelectItem>
-            </SelectContent>
-          </Select>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 rounded-full border border-gray-300 hover:bg-gray-100"
+              >
+                <ChevronDown className="h-4 w-4 text-gray-600" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                onClick={() => setGroupingEnabled(true)}
+                className={groupingEnabled ? "bg-accent" : ""}
+              >
+                Group by banger/ballad
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setGroupingEnabled(false)}
+                className={!groupingEnabled ? "bg-accent" : ""}
+              >
+                No grouping
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       )}
     </div>

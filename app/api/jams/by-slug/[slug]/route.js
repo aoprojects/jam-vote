@@ -13,6 +13,22 @@ export async function GET(request, context) {
     const jam = await Jam.findOne({ slug }).populate('songs.song');
 
     if (!jam) {
+      // Return mock data for demo jam (slug "4")
+      if (slug === '4') {
+        const mockJam = {
+          _id: 'demo-jam-4',
+          name: 'Demo Jam Session',
+          jamDate: new Date().toISOString(),
+          slug: '4',
+          archived: false,
+          songs: [],
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          __v: 0
+        };
+        return NextResponse.json(mockJam);
+      }
+      
       return NextResponse.json(
         { error: 'Jam not found' },
         { status: 404 }
