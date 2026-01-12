@@ -63,7 +63,7 @@ export default function CreateJamModal({ isOpen, onClose, onCreateJam }) {
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Create New Jam Session"
+      title="Create a new jam session"
       actions={
         <>
           <ModalPrimaryButton 

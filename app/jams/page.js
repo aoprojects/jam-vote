@@ -154,7 +154,24 @@ export default function Home() {
         {currentJams.length > 0 ? (
           <JamList jams={currentJams} />
         ) : (
-          <div className="px-4 py-4 text-sm text-gray-500">No upcoming jams scheduled</div>
+          <div className="px-4 py-12 text-center">
+            <div className="max-w-md mx-auto">
+              <p className="text-lg text-gray-600 mb-4">
+                🎵 No jams to view here yet! 🎵
+              </p>
+              <p className="text-sm text-gray-500 mb-6">
+                Create your first jam session to get the music started!
+              </p>
+              <Button
+                onClick={() => setIsModalOpen(true)}
+                size="lg"
+                className="inline-flex items-center gap-2"
+              >
+                <PlusIcon className="w-5 h-5" />
+                Create a Jam
+              </Button>
+            </div>
+          </div>
         )}
       </div>
 

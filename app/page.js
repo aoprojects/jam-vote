@@ -18,15 +18,15 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-900 to-black text-white py-6 px-4 sm:px-6 lg:px-8">
       {/* Hero Section */}
-      <div className="mb-24 max-w-4xl pt-32 md:pt-48">
-        <div className="flex items-center gap-4 mb-3">
+      <div className="mb-24 max-w-4xl mx-auto pt-32 md:pt-48 text-center">
+        <div className="flex items-center justify-center gap-4 mb-3">
           <Music className="h-16 w-16 text-purple-300" />
           <h1 className="text-6xl font-bold drop-shadow-lg">JamVote</h1>
         </div>
         <p className="text-2xl text-purple-200 mb-20">Host live music jams and vote on what to play next.</p>
 
         {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-5">
+        <div className="flex flex-col sm:flex-row gap-4 mb-5 justify-center">
           <Button 
             onClick={() => setIsCreateModalOpen(true)}
             size="lg" 
